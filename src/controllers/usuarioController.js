@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt';
 import prisma from '../config/prismaClient.js';
+import bcrypt from 'bcryptjs';
 
 export async function atualizarPerfil(req, res) {
   const usuarioId = req.usuarioId; 
