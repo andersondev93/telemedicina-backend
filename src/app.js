@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import consultaRoutes from './routes/consultaRoutes.js';
+import usuarioRoutes from './routes/usuarioRoutes.js';
 
 dotenv.config();
 
@@ -14,5 +15,6 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/consultas', consultaRoutes);
+app.use('/api/usuario', usuarioRoutes);
 
 export default app;
