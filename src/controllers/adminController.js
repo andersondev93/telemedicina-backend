@@ -131,17 +131,25 @@ export async function atualizarMedico(req, res) {
       data: usuarioData,
     });
 
+    // Busca o médico relacionado
+    const medico = await prisma.medico.findUnique({
+      where: { usuarioId: Number(id) },
+    });
+
+    if (!medico) {
+      return res.status(404).json({ error: 'Médico não encontrado.' });
+    }
+
     // Atualiza especialidade se informado
-    let especialidade;
     if (especialidadeNome) {
-      especialidade = await prisma.especialidade.upsert({
+      const especialidade = await prisma.especialidade.upsert({
         where: { nome: especialidadeNome },
         update: {},
         create: { nome: especialidadeNome },
       });
 
       await prisma.medico.update({
-        where: { usuarioId: Number(id) },
+        where: { id: medico.id },
         data: {
           especialidadeId: especialidade.id,
         },
@@ -150,8 +158,6 @@ export async function atualizarMedico(req, res) {
 
     // Substitui as disponibilidades, se informadas
     if (disponibilidades) {
-      const medico = await prisma.medico.findUnique({ where: { usuarioId: Number(id) } });
-
       await prisma.disponibilidade.deleteMany({
         where: { medicoId: medico.id },
       });
