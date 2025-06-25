@@ -2,8 +2,13 @@ import prisma from '../config/prismaClient.js';
 import bcrypt from 'bcryptjs';
 
 export async function atualizarPerfil(req, res) {
-  const usuarioId = req.usuarioId; 
   const { nome, email, senha } = req.body;
+  const userId = req.user?.id;
+ 
+if (!userId) {
+    return res.status(401).json({ error: 'Usuário não autenticado' });
+  }
+
 
   try {
     const dadosAtualizados = {
@@ -16,7 +21,7 @@ export async function atualizarPerfil(req, res) {
     }
 
     const usuarioAtualizado = await prisma.usuario.update({
-      where: { id: usuarioId },
+      where: { id: userId },
       data: dadosAtualizados,
       select: {
         id: true,
