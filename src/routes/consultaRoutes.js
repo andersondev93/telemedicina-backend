@@ -4,13 +4,14 @@ import { autenticarToken, verificarPaciente, verificarMedico } from '../middlewa
 import { listarDisponibilidades } from '../controllers/consultaController.js';
 import { listarConsultasDoPaciente } from '../controllers/consultaController.js';
 import { cancelarConsulta } from '../controllers/consultaController.js';
-import { listarConsultasDoMedico } from '../controllers/consultaController.js';
+import { listarConsultasDoMedico, listarMedicos } from '../controllers/consultaController.js';
 
 
 const router = express.Router();
 
 router.post('/agendar', autenticarToken, verificarPaciente, agendarConsulta);
 router.get('/disponibilidades/:medicoId', listarDisponibilidades);
+router.get('/listamedicos', autenticarToken, verificarPaciente, listarMedicos);
 router.get('/minhas', autenticarToken, verificarPaciente, listarConsultasDoPaciente);
 router.delete('/cancelar/:id', autenticarToken, verificarPaciente, cancelarConsulta);
 router.get('/medico', autenticarToken, verificarMedico, listarConsultasDoMedico);

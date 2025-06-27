@@ -55,6 +55,30 @@ export async function listarDisponibilidades(req, res) {
   }
 }
 
+export async function listarMedicos(req, res) {
+  try {
+    const medicos = await prisma.medico.findMany({
+      include: {
+        usuario: {
+          select: {
+            id: true,
+            nome: true,
+            email: true,
+            role: true,
+          },
+        },
+        especialidade: true,
+        disponibilidades: true,
+      },
+    });
+
+    res.json(medicos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar médicos' });
+  }
+}
+
 export async function listarConsultasDoPaciente(req, res) {
   const pacienteId = req.user.id;
 
