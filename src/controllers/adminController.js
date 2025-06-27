@@ -185,26 +185,21 @@ export async function deletarMedico(req, res) {
       where: { usuarioId: Number(id) },
     });
 
-    if (!medico) {
-      return res.status(404).json({ error: 'Médico não encontrado' });
+    if (medico) {
+      await prisma.disponibilidade.deleteMany({
+        where: { medicoId: medico.id },
+      });
+
+      await prisma.medico.delete({
+        where: { id: medico.id },
+      });
     }
 
-    // Deleta as disponibilidades do médico
-    await prisma.disponibilidade.deleteMany({
-      where: { medicoId: medico.id },
-    });
-
-    // Deleta o médico
-    await prisma.medico.delete({
-      where: { id: medico.id },
-    });
-
-    // Deleta o usuário vinculado
     await prisma.usuario.delete({
       where: { id: Number(id) },
     });
 
-    res.json({ message: 'Médico deletado com sucesso' });
+    res.json({ message: 'Médico (ou apenas usuário) deletado com sucesso' });
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: 'Erro ao deletar médico' });
