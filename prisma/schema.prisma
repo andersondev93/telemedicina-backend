@@ -14,23 +14,23 @@ datasource db {
 }
 
 model Usuario {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   nome      String
-  email     String   @unique
+  email     String     @unique
   senha     String
   role      Role
-  consultas Consulta[] @relation("UsuarioConsulta")
+  consultas Consulta[] @relation("UsuarioConsulta") 
   medico    Medico?
 }
 
 model Medico {
-  id              Int       @id @default(autoincrement())
-  usuarioId       Int       @unique
-  usuario         Usuario   @relation(fields: [usuarioId], references: [id])
-  consultas       Consulta[]
-  disponibilidades Disponibilidade[]
-  especialidadeId  Int
-  especialidade    Especialidade @relation(fields: [especialidadeId], references: [id])
+  id                Int              @id @default(autoincrement())
+  usuarioId         Int              @unique
+  usuario           Usuario          @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  consultas         Consulta[]       
+  disponibilidades  Disponibilidade[]
+  especialidadeId   Int
+  especialidade     Especialidade    @relation(fields: [especialidadeId], references: [id], onDelete: Cascade)
 }
 
 model Consulta {
@@ -39,23 +39,23 @@ model Consulta {
   medicoId   Int
   dataHora   DateTime
   status     String   @default("AGENDADA")
-  paciente   Usuario  @relation("UsuarioConsulta", fields: [pacienteId], references: [id])
-  medico     Medico   @relation(fields: [medicoId], references: [id])
+
+  paciente   Usuario  @relation("UsuarioConsulta", fields: [pacienteId], references: [id], onDelete: Cascade)
+  medico     Medico   @relation(fields: [medicoId], references: [id], onDelete: Cascade)
 }
 
 model Disponibilidade {
   id       Int      @id @default(autoincrement())
   medicoId Int
   dataHora DateTime
-  medico   Medico   @relation(fields: [medicoId], references: [id])
+  medico   Medico   @relation(fields: [medicoId], references: [id], onDelete: Cascade)
 }
 
 model Especialidade {
   id      Int       @id @default(autoincrement())
   nome    String    @unique
-  medicos Medico[] 
+  medicos Medico[]
 }
-
 
 enum Role {
   PACIENTE
