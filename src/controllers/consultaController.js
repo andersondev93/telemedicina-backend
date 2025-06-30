@@ -90,6 +90,9 @@ export async function listarConsultasDoPaciente(req, res) {
           include: {
             usuario: {
               select: { nome: true, email: true }
+            },
+            especialidade: {
+              select: { nome: true }
             }
           }
         }
@@ -103,6 +106,7 @@ export async function listarConsultasDoPaciente(req, res) {
     res.status(500).json({ error: 'Erro ao buscar consultas' });
   }
 }
+
 
 export async function cancelarConsulta(req, res) {
   const pacienteId = req.user.id;
